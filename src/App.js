@@ -5,7 +5,6 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import ChickenFoods from "./Components/LibraryItems/ChickenFoods/ChickenFoods";
 import LatestRecipe from "./Components/LatestRecipe/LatestRecipe";
-
 function App() {
   return (
     <Router>
