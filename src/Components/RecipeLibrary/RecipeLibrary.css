@@ -1,0 +1,38 @@
+.Library-items{
+    border-radius: 10px;
+    background-color: #D9D9D9;
+    font-weight: 1000;
+    width: 150px;
+    height: 100px;
+    text-align: center;
+    border: 1px solid black;
+    cursor: pointer;
+    transition: all;
+}
+.Library-items:hover{
+    background-color: red;
+    transition: 0.1s;
+}
+.Library-link{
+    width: 155px;
+}
+span{
+    position: relative;
+    top: 30px;
+    left: 5px;
+}
+a{
+    text-decoration: none;
+    color: black;
+}
+.RecipeLibrary{
+    display: grid;
+    gap: 50px;
+    position: relative;
+    row-gap: 100px;
+    left: 330px;
+    top: 50px;
+    padding-top: 30px;
+    padding-left: 60px;
+    grid-template-columns: repeat(3, 320px);
+}

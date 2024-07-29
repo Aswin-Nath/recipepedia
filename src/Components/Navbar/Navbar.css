@@ -1,0 +1,21 @@
+.Navbar{
+    background-color: #EE82EE;
+    height: 40px;
+    width: 1730px;
+}
+.Navbar-head{
+    position: relative;
+    display: flex;
+    gap: 130px;
+    top: 10px;
+    left: 400px;
+    width: 700px;
+}
+.Navbar-head a{
+    font-weight: 1000;
+    cursor: pointer;
+}
+.Profile{
+    position: relative;
+    left: 1100px;
+}
