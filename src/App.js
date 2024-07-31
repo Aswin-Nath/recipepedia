@@ -11,11 +11,11 @@ function App() {
        <div>
         <Navbar/>
         <Routes>
-          <Route path="/RecipeLibrary" element={<RecipeLibrary />} />
+          <Route path="/RecipeLibrary/" element={<RecipeLibrary />} />
           <Route path="/" element={<Navigate replace to='/RecipeLibrary' />} />
-          <Route path="/Curry" element={<Curry/>}/>
-          <Route path="/ChickenFoods" element={<ChickenFoods/>}/>
-          <Route path="/LatestRecipe" element={<LatestRecipe/>}/>
+          <Route path="/RecipeLibrary/Curry/" element={<Curry/>}/>
+          <Route path="/RecipeLibrary/ChickenFoods/" element={<ChickenFoods/>}/>
+          <Route path="/LatestRecipe/" element={<LatestRecipe/>}/>
         </Routes>
       </div>
     </Router>

@@ -6,7 +6,7 @@ function RecipeLibrary() {
   return (
     <div className="Library-main">
       <div className="RecipeLibrary">
-        <Link to="/Curry" className="Library-link">
+        <Link to="/RecipeLibrary/Curry" className="Library-link">
           <div className="Library-items">
             <span>Curries</span>
           </div>
@@ -36,7 +36,7 @@ function RecipeLibrary() {
             <span>Snacks</span>
           </div>
         </Link>
-        <Link to="/ChickenFoods" className="Library-link">
+        <Link to="/RecipeLibrary/ChickenFoods" className="Library-link">
           <div className="Library-items">
             <span>Chicken Foods</span>
           </div>

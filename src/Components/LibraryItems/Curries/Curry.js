@@ -1,11 +1,39 @@
-import React from 'react'
+import React, { useEffect, useState,useRef } from 'react'
 import "./Curry.css";
+import start from "../../../images/start.png";
 import image from "../../../images/Curry.png";
-import like from "../../../images/Like.png"; 
+import like_image from "../../../images/Like.png"
 import Love from "../../../images/love.png"; 
 import Comments from "../../../images/Comments.png"; 
-
 function Curry() {
+    const [hover,sethover]=useState(false);
+    const timeoutref=useRef(null);
+    const Leave=()=>{
+        timeoutref.current=
+            setTimeout(()=>{
+                sethover(false);
+            },2000);
+    }
+    const EnterInTab=()=>{
+        if(timeoutref.current){
+        clearTimeout(timeoutref.current);
+        }
+    }
+    const [like,setlike]=useState(false);
+    const [love,setlove]=useState(false);
+    const [comments,setcomments]=useState(false);
+    
+    const toggle=(par)=>{
+        if(par=='like'){
+            setlike(like^1);
+        }
+        else if(par=="love"){
+            setlove(love^1);
+        }
+        else{
+            setcomments(comments^1);
+        }
+    }
     const RecipeDetails = [
         {
             Name: "Chapathi Daal",
@@ -251,6 +279,7 @@ function Curry() {
             ]
         }
     ];
+    
   return (
     <div className="Curry">
             <div className="Curry-Generator">
@@ -285,11 +314,19 @@ function Curry() {
                                     <h4>Popular Regions:{i.PopularRegions}</h4>
                                     <h4>Estimated Calories:{i.EstimatedCalories}</h4>
                             </div>            
-                            <div className="Curry-Image">
-                                <img id="Like" src={like}></img>
-                                <img id="Love" src={Love}></img>
-                                <img id='Comments' src={Comments}></img>
-                            </div>
+                            <div className="hover-reactions">
+                    <img onMouseEnter={()=>{
+                        sethover(true);
+                    }} 
+                    onMouseLeave={Leave} 
+                    src={start}></img>
+            </div>
+                <div style={{display:hover?"block":"none"}} onMouseEnter={EnterInTab} 
+                    onMouseLeave={Leave}   className="hover-display">
+                    <img className="Like" src={like_image}></img>
+                    <img className="Love" src={Love}></img>
+                    <img className='Comments' src={Comments}></img>
+                </div>
                                     
                         </div>
                             ))}
