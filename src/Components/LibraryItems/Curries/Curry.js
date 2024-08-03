@@ -1,39 +1,73 @@
-import React, { useEffect, useState,useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react';
 import "./Curry.css";
 import start from "../../../images/start.png";
 import image from "../../../images/Curry.png";
-import like_image from "../../../images/Like.png"
-import Love from "../../../images/love.png"; 
-import Comments from "../../../images/Comments.png"; 
+import like_image from "../../../images/Like.png";
+import Love from "../../../images/love.png";
+import Comments from "../../../images/Comments.png";
+
 function Curry() {
-    const [hover,sethover]=useState(false);
-    const timeoutref=useRef(null);
-    const Leave=()=>{
-        timeoutref.current=
-            setTimeout(()=>{
-                sethover(false);
-            },2000);
-    }
-    const EnterInTab=()=>{
-        if(timeoutref.current){
-        clearTimeout(timeoutref.current);
+    const [hoveredIndex, setHoveredIndex] = useState(null);
+    const [ClickedIndex,setClickedIndex]=useState(null);
+    const timeoutRefs = useRef([]);
+    const [liked,setliked]=useState(false);
+    const [commented,setcommented]=useState(false);
+    const [loved,setloved]=useState(false);
+    const [clicked,setclicked]=useState(false);
+    const [Mainimage,setMainimage]=useState(start);
+    const handleMouseEnter = (index) => {
+        if (timeoutRefs.current[index]) {
+            clearTimeout(timeoutRefs.current[index]);
         }
-    }
-    const [like,setlike]=useState(false);
-    const [love,setlove]=useState(false);
-    const [comments,setcomments]=useState(false);
+        setHoveredIndex(index);
+    };
+
+    const handleMouseLeave = (index) => {
+        timeoutRefs.current[index] = setTimeout(() => {
+            setHoveredIndex(null);
+        }, 2000);
+    };
+
+    const handleMouseEnterTab = (index) => {
+        if (timeoutRefs.current[index]) {
+            clearTimeout(timeoutRefs.current[index]);
+        }
+    };
+    const trigger = (index,type) => {
+
+        if (!clicked) {
+            setClickedIndex(index);
+            setclicked(true);
+            switch (type) {
+                case 'like':
+                    setMainimage(like_image);
+                    setliked(true);
+                    setloved(false);
+                    setcommented(false);
+                    break;
+                case 'love':
+                    setMainimage(Love);
+                    setloved(true);
+                    setliked(false);
+                    setcommented(false);
+                    break;
+                default:
+                    setMainimage(Comments);
+                    setliked(false);
+                    setcommented(true);
+                    setloved(false);
+                    break;
+            }
+        } else {
+            setClickedIndex(null);
+            setMainimage(start);
+            setclicked(false);
+            setcommented(false);
+            setliked(false);
+            setloved(false);
+        }
+    };
     
-    const toggle=(par)=>{
-        if(par=='like'){
-            setlike(like^1);
-        }
-        else if(par=="love"){
-            setlove(love^1);
-        }
-        else{
-            setcomments(comments^1);
-        }
-    }
     const RecipeDetails = [
         {
             Name: "Chapathi Daal",
@@ -280,59 +314,79 @@ function Curry() {
         }
     ];
     
-  return (
-    <div className="Curry">
+    return (
+        <div className="Curry">
             <div className="Curry-Generator">
                 <div className="Curry-items">
-                    {RecipeDetails.map((i, index) => (
+                    {RecipeDetails.map((recipe, index) => (
                         <div className="Curry-item" key={index}>
                             <div className="Curry-image">
-                                <img src={image}></img>
-                                <h4>{i.Name}</h4>
+                                <img src={image} alt={recipe.Name} />
+                                <h4>{recipe.Name}</h4>
                             </div>
                             <div className="Curry-lower">
-
                                 <div className="Ingredients">
                                     <h3 style={{color:"red"}}>Ingredients:</h3>
                                     <ul>
-                                        {i.Ingredients.map((ingredient, index) => (
-                                            <li key={index}>{ingredient}</li>
+                                        {recipe.Ingredients.map((ingredient, i) => (
+                                            <li key={i}>{ingredient}</li>
                                         ))}
                                     </ul>
                                 </div>
                                 <div className="Methodology">
                                     <h3 style={{color:"red"}}>Methodology:</h3>
                                     <ol>
-                                        {i.Methodology.map((step, index) => (
-                                            <li key={index}>{step}</li>
+                                        {recipe.Methodology.map((step, i) => (
+                                            <li key={i}>{step}</li>
                                         ))}
                                     </ol>
                                 </div>
                             </div>
                             <div className="Curry-upper">
-                                    <h4>Popularly Eaten With:{i.PopularlyEaten}</h4>
-                                    <h4>Popular Regions:{i.PopularRegions}</h4>
-                                    <h4>Estimated Calories:{i.EstimatedCalories}</h4>
-                            </div>            
-                            <div className="hover-reactions">
-                    <img onMouseEnter={()=>{
-                        sethover(true);
-                    }} 
-                    onMouseLeave={Leave} 
-                    src={start}></img>
-            </div>
-                <div style={{display:hover?"block":"none"}} onMouseEnter={EnterInTab} 
-                    onMouseLeave={Leave}   className="hover-display">
-                    <img className="Like" src={like_image}></img>
-                    <img className="Love" src={Love}></img>
-                    <img className='Comments' src={Comments}></img>
-                </div>
-                                    
+                                <h4>Popularly Eaten With: {recipe.PopularlyEaten}</h4>
+                                <h4>Popular Regions: {recipe.PopularRegions}</h4>
+                                <h4>Estimated Calories: {recipe.EstimatedCalories}</h4>
+                            </div>
+                            {(!clicked) || (clicked && ClickedIndex!=index)?
+                            <div>
+                                <div className="hover-reactions">
+                                    <img
+                                        onMouseEnter={() => handleMouseEnter(index)}
+                                        onMouseLeave={() => handleMouseLeave(index)}
+                                        src={start}
+                                        alt="start"
+                                    />
+                                </div>
+                            
+                                <div
+                                    style={{display: hoveredIndex === index ? "block" : "none"}}
+                                    onMouseEnter={() => handleMouseEnterTab(index)}
+                                    onMouseLeave={() => handleMouseLeave(index)}
+                                    className="hover-display"
+                                >
+                                    <img onClick={()=>{trigger(index,"like")}} className="Like" src={like_image} alt="Like" />
+                                    <img onClick={()=>{trigger(index,"love")}} className="Love" src={Love} alt="Love" />
+                                    <img onClick={()=>{trigger(index,"comment")}} className="Comments" src={Comments} alt="Comments" />
+                                </div>
+                            </div>
+                            :
+                            // when clicked
+                            <div>
+                                <div className="hover-reactions">
+                                    <img
+                                        onClick={()=>{trigger(index,"null")}}
+                                        src={Mainimage}
+                                        alt="start"
+                                    />
+                                </div>
+                            </div>  
+                        }
                         </div>
-                            ))}
+                    ))}
                 </div>
             </div>
         </div>
-  )
+    );
 }
+
 export default Curry;
