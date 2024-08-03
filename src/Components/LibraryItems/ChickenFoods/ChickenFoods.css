@@ -64,12 +64,31 @@
     margin: 0;
     padding: 0;
 }
-.chicken-Image{
-    position: relative;
-    bottom: 120px;
-}
-.chicken-Image img{
+
+.hover-display img{
     width: 60px;
     height: 30px;
     justify-content: flex-end;
+    cursor: pointer;
+}
+.Like,.Love,.Comments{
+    cursor: pointer;
+}
+.hover-display{
+    border: 1px solid black;
+    width: 200px;
+    border-radius: 20px;
+    position: relative;
+    bottom:80px;
+}
+.hover-reactions img{
+    width: 60px;
+    height: 30px;
+    justify-content: flex-end;
+    cursor: pointer;
+}
+.hover-reactions{
+    position: relative;
+    bottom: 120px;
+    width: 60px;
 }

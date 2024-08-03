@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import "./ChickenFoods.css";
 import image from "../../../images/Curry.png";
 import like from "../../../images/Like.png"; 
 import Love from "../../../images/love.png"; 
 import Comments from "../../../images/Comments.png"; 
+import start from "../../../images/start.png";
+import { hover } from "@testing-library/user-event/dist/hover";
 function ChickenFoods() {
     const ChickenRecipes = [
     {
@@ -125,7 +127,19 @@ function ChickenFoods() {
         ]
     }
 ];
-
+const [hover,sethover]=useState(false);
+const timeoutref=useRef(null);
+const Leave=()=>{
+    timeoutref.current=
+        setTimeout(()=>{
+            sethover(false);
+        },2000);
+}
+const EnterInTab=()=>{
+    if(timeoutref.current){
+    clearTimeout(timeoutref.current);
+    }
+}
   return (
     <div className="ChickenFoods">
         <div className="ChickenFoods-Generator">
@@ -159,12 +173,20 @@ function ChickenFoods() {
                 <h4>Popular Regions: {i.PopularRegions}</h4>
                 <h4>Estimated Calories: {i.EstimatedCalories}</h4>
             </div>
-            <div className="chicken-Image">
-                <img id="Like" src={like}></img>
-                <img id="Love" src={Love}></img>
-                <img id='Comments' src={Comments}></img>
+            <div className="hover-reactions">
+                    <img onMouseEnter={()=>{
+                        sethover(true);
+                    }} 
+                    onMouseLeave={Leave} 
+                    src={start}>
+                </img>
             </div>
-            
+                <div style={{display:hover?"block":"none"}} onMouseEnter={EnterInTab} 
+                    onMouseLeave={Leave}   className="hover-display">
+                    <img className="Like" src={like}></img>
+                    <img className="Love" src={Love}></img>
+                    <img className='Comments' src={Comments}></img>
+                </div>
         </div>
     ))}
             </div>
