@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import "./Curry.css";
 import start from "../../../images/start.png";
 import image from "../../../images/Curry.png";
@@ -8,66 +8,7 @@ import Comments from "../../../images/Comments.png";
 
 function Curry() {
     const [hoveredIndex, setHoveredIndex] = useState(null);
-    const [ClickedIndex,setClickedIndex]=useState(null);
     const timeoutRefs = useRef([]);
-    const [liked,setliked]=useState(false);
-    const [commented,setcommented]=useState(false);
-    const [loved,setloved]=useState(false);
-    const [clicked,setclicked]=useState(false);
-    const [Mainimage,setMainimage]=useState(start);
-    const handleMouseEnter = (index) => {
-        if (timeoutRefs.current[index]) {
-            clearTimeout(timeoutRefs.current[index]);
-        }
-        setHoveredIndex(index);
-    };
-
-    const handleMouseLeave = (index) => {
-        timeoutRefs.current[index] = setTimeout(() => {
-            setHoveredIndex(null);
-        }, 2000);
-    };
-
-    const handleMouseEnterTab = (index) => {
-        if (timeoutRefs.current[index]) {
-            clearTimeout(timeoutRefs.current[index]);
-        }
-    };
-    const trigger = (index,type) => {
-
-        if (!clicked) {
-            setClickedIndex(index);
-            setclicked(true);
-            switch (type) {
-                case 'like':
-                    setMainimage(like_image);
-                    setliked(true);
-                    setloved(false);
-                    setcommented(false);
-                    break;
-                case 'love':
-                    setMainimage(Love);
-                    setloved(true);
-                    setliked(false);
-                    setcommented(false);
-                    break;
-                default:
-                    setMainimage(Comments);
-                    setliked(false);
-                    setcommented(true);
-                    setloved(false);
-                    break;
-            }
-        } else {
-            setClickedIndex(null);
-            setMainimage(start);
-            setclicked(false);
-            setcommented(false);
-            setliked(false);
-            setloved(false);
-        }
-    };
-    
     const RecipeDetails = [
         {
             Name: "Chapathi Daal",
@@ -313,7 +254,56 @@ function Curry() {
             ]
         }
     ];
+    const [clickedStates, setClickedStates] = useState(Array(RecipeDetails.length).fill(false));
+    const [mainImages, setMainImages] = useState(Array(RecipeDetails.length).fill(start));
     
+    const handleMouseEnter = (index) => {
+        if (timeoutRefs.current[index]) {
+            clearTimeout(timeoutRefs.current[index]);
+        }
+        setHoveredIndex(index);
+    };
+
+    const handleMouseLeave = (index) => {
+        timeoutRefs.current[index] = setTimeout(() => {
+            setHoveredIndex(null);
+        }, 2000);
+    };
+
+    const handleMouseEnterTab = (index) => {
+        if (timeoutRefs.current[index]) {
+            clearTimeout(timeoutRefs.current[index]);
+        }
+    };
+
+    const trigger = (index, type) => {
+        const newClickedStates = [...clickedStates];
+        const newMainImages = [...mainImages];
+
+        if (clickedStates[index] === false) {
+            newClickedStates[index] = true;
+            switch (type) {
+                case 'like':
+                    newMainImages[index] = like_image;
+                    break;
+                case 'love':
+                    newMainImages[index] = Love;
+                    break;
+                default:
+                    newMainImages[index] = Comments;
+                    break;
+            }
+        } else {
+            newClickedStates[index] = false;
+            newMainImages[index] = start;
+        }
+
+        setClickedStates(newClickedStates);
+        setMainImages(newMainImages);
+    };
+
+    
+
     return (
         <div className="Curry">
             <div className="Curry-Generator">
@@ -347,40 +337,39 @@ function Curry() {
                                 <h4>Popular Regions: {recipe.PopularRegions}</h4>
                                 <h4>Estimated Calories: {recipe.EstimatedCalories}</h4>
                             </div>
-                            {(!clicked) || (clicked && ClickedIndex!=index)?
-                            <div>
-                                <div className="hover-reactions">
-                                    <img
-                                        onMouseEnter={() => handleMouseEnter(index)}
+                            {!clickedStates[index] ? (
+                                <div>
+                                    <div className="hover-reactions">
+                                        <img
+                                            onMouseEnter={() => handleMouseEnter(index)}
+                                            onMouseLeave={() => handleMouseLeave(index)}
+                                            src={start}
+                                            alt="start"
+                                        />
+                                    </div>
+
+                                    <div
+                                        style={{display: hoveredIndex === index ? "block" : "none"}}
+                                        onMouseEnter={() => handleMouseEnterTab(index)}
                                         onMouseLeave={() => handleMouseLeave(index)}
-                                        src={start}
-                                        alt="start"
-                                    />
+                                        className="hover-display"
+                                    >
+                                        <img onClick={() => trigger(index, "like")} className="Like" src={like_image} alt="Like" />
+                                        <img onClick={() => trigger(index, "love")} className="Love" src={Love} alt="Love" />
+                                        <img onClick={() => trigger(index, "comment")} className="Comments" src={Comments} alt="Comments" />
+                                    </div>
                                 </div>
-                            
-                                <div
-                                    style={{display: hoveredIndex === index ? "block" : "none"}}
-                                    onMouseEnter={() => handleMouseEnterTab(index)}
-                                    onMouseLeave={() => handleMouseLeave(index)}
-                                    className="hover-display"
-                                >
-                                    <img onClick={()=>{trigger(index,"like")}} className="Like" src={like_image} alt="Like" />
-                                    <img onClick={()=>{trigger(index,"love")}} className="Love" src={Love} alt="Love" />
-                                    <img onClick={()=>{trigger(index,"comment")}} className="Comments" src={Comments} alt="Comments" />
+                            ) : (
+                                <div>
+                                    <div className="hover-reactions">
+                                        <img
+                                            onClick={() => trigger(index, "null")}
+                                            src={mainImages[index]}
+                                            alt="start"
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                            :
-                            // when clicked
-                            <div>
-                                <div className="hover-reactions">
-                                    <img
-                                        onClick={()=>{trigger(index,"null")}}
-                                        src={Mainimage}
-                                        alt="start"
-                                    />
-                                </div>
-                            </div>  
-                        }
+                            )}
                         </div>
                     ))}
                 </div>
