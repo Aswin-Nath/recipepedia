@@ -5,10 +5,11 @@ import image from "../../../images/Curry.png";
 import like_image from "../../../images/Like.png";
 import Love from "../../../images/love.png";
 import Comments from "../../../images/Comments.png";
-
+import cross from "../../../images/x.png";
 function Curry() {
     const [hoveredIndex, setHoveredIndex] = useState(null);
     const timeoutRefs = useRef([]);
+    const fileInputRef=useRef(null);
     const RecipeDetails = [
         {
             Name: "Chapathi Daal",
@@ -289,9 +290,7 @@ function Curry() {
                 case 'love':
                     newMainImages[index] = Love;
                     break;
-                default:
-                    newMainImages[index] = Comments;
-                    break;
+                
             }
         } else {
             newClickedStates[index] = false;
@@ -301,13 +300,49 @@ function Curry() {
         setClickedStates(newClickedStates);
         setMainImages(newMainImages);
     };
+    const [imagePre,setimagePre]=useState(null);
+    const handleImageUpload=(event)=>{
+        const file=event.target.files[0];
+        if(file){
+            setimagePre(URL.createObjectURL(file));
+        }
+    }
+    const removeImage=()=>{
+        setimagePre(null);
+        fileInputRef.current.value="";
+    }
+    const push=()=>{
+        const oldRecipes=[...RecipeDetails];
 
-    
-
+        let newRecipe = {
+            Name: "New Recipe",
+            PopularlyEaten: "Dinner",
+            PopularRegions: "USA",
+            EstimatedCalories: "600 kcal",
+            Ingredients: ["Flour", "Cheese", "Butter"],
+            Methodology: [
+                "Preheat oven to 350°F.",
+                "Mix ingredients thoroughly."
+            ]
+        };
+        oldRecipes.unshift(newRecipe);
+        
+    }
     return (
         <div className="Curry">
             <div className="Curry-Generator">
                 <div className="Curry-items">
+                    <div className="Upload-Recipe">
+                        <form className="Form-data">
+                            <input type="text" placeholder="RecipeName"></input>
+                            <br></br>
+                            <input ref={fileInputRef} onChange={handleImageUpload} type="file" placeholder="Upload Recipe Image"></input>
+                            <br></br>
+                            <button onSubmit={push} type="submit">Add Recipe</button>
+                        </form>
+                        <img src={cross} className="remove-icon" onClick={removeImage}></img>
+                        <img className="Uploaded-image" src={imagePre}></img>
+                    </div>
                     {RecipeDetails.map((recipe, index) => (
                         <div className="Curry-item" key={index}>
                             <div className="Curry-image">
@@ -356,8 +391,9 @@ function Curry() {
                                     >
                                         <img onClick={() => trigger(index, "like")} className="Like" src={like_image} alt="Like" />
                                         <img onClick={() => trigger(index, "love")} className="Love" src={Love} alt="Love" />
-                                        <img onClick={() => trigger(index, "comment")} className="Comments" src={Comments} alt="Comments" />
+                                        
                                     </div>
+                                    
                                 </div>
                             ) : (
                                 <div>
@@ -370,6 +406,12 @@ function Curry() {
                                     </div>
                                 </div>
                             )}
+                            <div className="Comments">
+                                <img src={Comments} alt="Comments" />
+                            </div>
+                            <div className="Comment-div">
+                                
+                            </div>
                         </div>
                     ))}
                 </div>
