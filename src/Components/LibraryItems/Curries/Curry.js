@@ -255,6 +255,7 @@ function Curry() {
             ]
         }
     ];
+    const [recipe,setrecipe]=useState(RecipeDetails);
     const [clickedStates, setClickedStates] = useState(Array(RecipeDetails.length).fill(false));
     const [mainImages, setMainImages] = useState(Array(RecipeDetails.length).fill(start));
     
@@ -311,11 +312,11 @@ function Curry() {
         setimagePre(null);
         fileInputRef.current.value="";
     }
-    const push=()=>{
-        const oldRecipes=[...RecipeDetails];
-
-        let newRecipe = {
-            Name: "New Recipe",
+    const push = (event) => {
+        event.preventDefault();
+        const form = event.target;
+        const newRecipe = {
+            Name: form.elements.RecipeName.value,
             PopularlyEaten: "Dinner",
             PopularRegions: "USA",
             EstimatedCalories: "600 kcal",
@@ -323,30 +324,34 @@ function Curry() {
             Methodology: [
                 "Preheat oven to 350°F.",
                 "Mix ingredients thoroughly."
-            ]
+            ],
+            ImageUrl: imagePre // Use imagePre as the image URL
         };
-        oldRecipes.unshift(newRecipe);
-        
-    }
+        setrecipe([newRecipe, ...recipe]);
+        form.reset(); 
+        setimagePre(null);
+        fileInputRef.current.value = ""; 
+    };
+    
     return (
         <div className="Curry">
             <div className="Curry-Generator">
                 <div className="Curry-items">
                     <div className="Upload-Recipe">
-                        <form className="Form-data">
-                            <input type="text" placeholder="RecipeName"></input>
+                        <form className="Form-data" onSubmit={push}>
+                            <input name="RecipeName" type="text" placeholder="RecipeName"></input>
                             <br></br>
-                            <input ref={fileInputRef} onChange={handleImageUpload} type="file" placeholder="Upload Recipe Image"></input>
+                            <input name="ChosenImage" className="Chosen" ref={fileInputRef} onChange={handleImageUpload} type="file" placeholder="Upload Recipe Image"></input>
                             <br></br>
-                            <button onSubmit={push} type="submit">Add Recipe</button>
+                            <button type="submit">Add Recipe</button>
                         </form>
                         <img src={cross} className="remove-icon" onClick={removeImage}></img>
-                        <img className="Uploaded-image" src={imagePre}></img>
+                        {imagePre && <img className="Uploaded-image" src={imagePre}/>}
                     </div>
-                    {RecipeDetails.map((recipe, index) => (
+                    {recipe.map((recipe, index) => (
                         <div className="Curry-item" key={index}>
                             <div className="Curry-image">
-                                <img src={image} alt={recipe.Name} />
+                                <img src={recipe.ImageUrl ? recipe.ImageUrl : image} alt={recipe.Name} />
                                 <h4>{recipe.Name}</h4>
                             </div>
                             <div className="Curry-lower">
