@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import "./Curry.css";
 import start from "../../../images/start.png";
 import like_image from "../../../images/Like.png";
@@ -8,13 +8,9 @@ import Comments from "../../../images/Comments.png";
 function Curry() {
     const [recipes, setRecipes] = useState([]);
     const [hoveredIndex, setHoveredIndex] = useState(null);
-    const [ClickedIndex, setClickedIndex] = useState(null);
     const timeoutRefs = useRef([]);
-    const [liked, setliked] = useState(false);
-    const [commented, setcommented] = useState(false);
-    const [loved, setloved] = useState(false);
-    const [clicked, setclicked] = useState(false);
-    const [Mainimage, setMainimage] = useState(start);
+    const [likes, setLikes] = useState(Array(10).fill(false)); // Assume 10 recipes for initial state
+    const [comments, setComments] = useState(Array(10).fill(0)); // Count of comments for each recipe
 
     const fetchRecipes = async () => {
         try {
@@ -25,6 +21,8 @@ function Curry() {
             const data = await response.json();
             console.log("Fetched recipes:", data);
             setRecipes(data);
+            setLikes(Array(data.length).fill(false)); // Initialize likes state based on fetched data length
+            setComments(Array(data.length).fill(0)); // Initialize comments state based on fetched data length
         } catch (error) {
             console.error("Error fetching recipes:", error);
         }
@@ -34,7 +32,17 @@ function Curry() {
         fetchRecipes();
     }, []);
 
-    // ... (rest of your existing code)
+    const handleLike = (index) => {
+        const updatedLikes = [...likes];
+        updatedLikes[index] = !updatedLikes[index]; // Toggle like state
+        setLikes(updatedLikes);
+    };
+
+    const handleComment = (index) => {
+        const updatedComments = [...comments];
+        updatedComments[index] += 1; // Increment comment count
+        setComments(updatedComments);
+    };
 
     return (
         <div className="Curry">
@@ -43,7 +51,8 @@ function Curry() {
                     {recipes.map((recipe, index) => (
                         <div className="Curry-item" key={index}>
                             <div className="Curry-image">
-                                <img style={{ width: "200px", height: "300px", paddingLeft: "10px" }} 
+                                <img
+                                    style={{ width: "200px", height: "300px", paddingLeft: "10px" }} 
                                     src={recipe.imageUrl} 
                                     alt={recipe.name} 
                                     border="0"
@@ -63,7 +72,20 @@ function Curry() {
                                 <h4>Popular Regions: {recipe.popularRegions}</h4>
                                 <h4>Estimated Calories: {recipe.estimatedCalories}</h4>
                             </div>
-                            {/* The rest of your interaction code here... */}
+                            <div className="Curry-interactions">
+                                <button 
+                                    className={`like-button ${likes[index] ? 'liked' : ''}`}
+                                    onClick={() => handleLike(index)}
+                                >
+                                    {likes[index] ? 'Liked' : 'Like'}
+                                </button>
+                                <button 
+                                    className="comment-button" 
+                                    onClick={() => handleComment(index)}
+                                >
+                                    Comment ({comments[index]})
+                                </button>
+                            </div>
                         </div>
                     ))}
                 </div>

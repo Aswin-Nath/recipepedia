@@ -36,10 +36,26 @@
 }
 
 .Curry-upper {
-    color: #333; /* Darker text color for better readability */
     gap: 5px;
     text-align: center;
     font-family: 'Courier New', Courier, monospace;
+}
+
+.Curry-upper h4 {
+    margin: 5px 0; /* Spacing for headings */
+}
+
+/* Color Styles for Headings */
+.Curry-upper h4:first-child {
+    color: #ff6347; /* Tomato color for "Popularly Eaten With" */
+}
+
+.Curry-upper h4:nth-child(2) {
+    color: #4682b4; /* Steel blue for "Popular Regions" */
+}
+
+.Curry-upper h4:nth-child(3) {
+    color: #32cd32; /* Lime green for "Estimated Calories" */
 }
 
 .Curry-lower {
@@ -62,10 +78,6 @@
     border-radius: 20px;
     width: 100%; /* Make the image responsive */
     max-width: 200px; /* Limit max width for the image */
-}
-
-.Curry-upper h4 {
-    margin: 5px 0; /* Spacing for headings */
 }
 
 .hover-display {
@@ -100,4 +112,36 @@
     height: 30px;
     cursor: pointer;
     margin-right: 10px; /* Space between reaction images */
+}
+
+.Curry-interactions {
+    display: flex;
+    justify-content: space-between; /* Space between the buttons */
+    margin-top: 10px; /* Spacing above */
+}
+
+.like-button, .comment-button {
+    padding: 10px 15px; /* Padding for buttons */
+    border: none; /* Remove default border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-family: 'Courier New', Courier, monospace; /* Consistent font */
+}
+
+.like-button {
+    background-color: #007bff; /* Primary color for like button */
+    color: white; /* White text */
+}
+
+.like-button.liked {
+    background-color: #28a745; /* Green color when liked */
+}
+
+.comment-button {
+    background-color: #ffc107; /* Warning color for comment button */
+    color: white; /* White text */
+}
+
+.like-button:hover, .comment-button:hover {
+    opacity: 0.8; /* Slightly transparent on hover */
 }
