@@ -1,80 +1,44 @@
-import React from 'react'
-import image from "../../images/Latest.png";
+import React, { useState, useEffect } from 'react';
 import "./LatestRecipe.css";
+
 function LatestRecipe() {
-    const RecipeDetails = [
-        {
-            Name: "Chapathi Daal",
-            cook: "Balaji",
-            uploaded: "10 mins ago"
-        },
-        {
-            Name: "Pizza Margherita",
-            cook: "Balaji",
-            uploaded: "10 mins ago"
-        },
-        {
-            Name: "Spaghetti Carbonara",
-            cook: "Balaji",
-            uploaded: "10 mins ago"
-        },
-        {
-            Name: "Chicken Biryani",
-            cook: "Balaji",
-            uploaded: "15 mins ago"
-        },
-        {
-            Name: "Caesar Salad",
-            cook: "Balaji",
-            uploaded: "20 mins ago"
-        },
-        {
-            Name: "Vegetable Stir Fry",
-            cook: "Balaji",
-            uploaded: "25 mins ago"
-        },
-        {
-            Name: "Beef Tacos",
-            cook: "Balaji",
-            uploaded: "30 mins ago"
-        },
-        {
-            Name: "Lemon Tart",
-            cook: "Balaji",
-            uploaded: "35 mins ago"
-        },
-        {
-            Name: "Garlic Butter Shrimp",
-            cook: "Balaji",
-            uploaded: "40 mins ago"
-        },
-        {
-            Name: "Greek Yogurt Parfait",
-            cook: "Balaji",
-            uploaded: "45 mins ago"
+    const [recipes, setRecipes] = useState([]);
+
+    const fetchRecipes = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/api/recipes'); // Correct URL for the backend
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data = await response.json();
+            setRecipes(data);
+        } catch (error) {
+            console.error("Error fetching recipes:", error);
         }
-    ];
-    
+    };
+
+    useEffect(() => {
+        fetchRecipes();
+    }, []);
+
     return (
-    <div className="LatestRecipe">
-        <div className="LatestRecipe-Generator">
-            <div className="LatestRecipe-items">
-            {RecipeDetails.map((i, index) => (
-                <div className="LatestRecipe-item" key={index}>
-                    <div className="LatestRecipe-image">
-                        <img src={image}></img>
-                        <h4>{i.Name}</h4>
-                        <h4>Cook: {i.cook}</h4>
-                        <h4>uploaded: {i.uploaded}</h4>
-                    </div>
-                   
-                    
+        <div className="LatestRecipe">
+            <div className="LatestRecipe-Generator">
+                <div className="LatestRecipe-items">
+                    {recipes.map((recipe, index) => (
+                        <div className="LatestRecipe-item" key={index}>
+                            <div className="LatestRecipe-image">
+                                <img src={recipe.imageUrl} alt={recipe.name} />
+                                <h4>{recipe.name}</h4>
+                                <h4>Cook: {recipe.cook}</h4> {/* Assuming 'cook' data exists in your API */}
+                                <h4>Uploaded: {recipe.uploaded || "Just now"}</h4> {/* Placeholder for uploaded time */}
+                            </div>
+                        </div>
+                    ))}
                 </div>
-    ))}
             </div>
         </div>
-    </div>
-  )
+    );
 }
 
-export default LatestRecipe
+export default LatestRecipe;
