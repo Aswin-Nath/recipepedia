@@ -10,7 +10,7 @@ function Curry() {
     const [hoveredIndex, setHoveredIndex] = useState(null);
     const timeoutRefs = useRef([]);
     const [likes, setLikes] = useState(Array(10).fill(false)); // Assume 10 recipes for initial state
-    const [comments, setComments] = useState(Array(10).fill(0)); // Count of comments for each recipe
+    const [comments, setComments] = useState(Array(10).fill(0));
 
     const fetchRecipes = async () => {
         try {
@@ -40,7 +40,7 @@ function Curry() {
 
     const handleComment = (index) => {
         const updatedComments = [...comments];
-        updatedComments[index] += 1; // Increment comment count
+        updatedComments[index]++; // Increment comment count
         setComments(updatedComments);
     };
 
@@ -68,7 +68,7 @@ function Curry() {
                                 </div>
                             </div>
                             <div className="Curry-upper">
-                                <h4>Popularly Eaten With: {recipe.popularlyEaten}</h4>
+                                <h4>Popularly Eaten With: {recipe.popularMeals}</h4>
                                 <h4>Popular Regions: {recipe.popularRegions}</h4>
                                 <h4>Estimated Calories: {recipe.estimatedCalories}</h4>
                             </div>
