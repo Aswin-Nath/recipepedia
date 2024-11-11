@@ -1,12 +1,12 @@
 import React, { useState, useRef } from 'react';
 import "./Curry.css";
 import start from "../../../images/start.png";
-import image from "../../../images/Curry.png";
 import like_image from "../../../images/Like.png";
 import Love from "../../../images/love.png";
 import Comments from "../../../images/Comments.png";
 import cross from "../../../images/x.png";
 function Curry() {
+    const [recipes, setRecipes] = useState([]);
     const [hoveredIndex, setHoveredIndex] = useState(null);
     const timeoutRefs = useRef([]);
     const fileInputRef=useRef(null);
@@ -356,26 +356,16 @@ function Curry() {
                             </div>
                             <div className="Curry-lower">
                                 <div className="Ingredients">
-                                    <h3 style={{color:"red"}}>Ingredients:</h3>
-                                    <ul>
-                                        {recipe.Ingredients.map((ingredient, i) => (
-                                            <li key={i}>{ingredient}</li>
-                                        ))}
-                                    </ul>
+                                    <p><strong>Ingredients:</strong> {JSON.parse(recipe.ingredients).join(', ')}</p>
                                 </div>
                                 <div className="Methodology">
-                                    <h3 style={{color:"red"}}>Methodology:</h3>
-                                    <ol>
-                                        {recipe.Methodology.map((step, i) => (
-                                            <li key={i}>{step}</li>
-                                        ))}
-                                    </ol>
+                                    <p><strong>Methodology:</strong> {JSON.parse(recipe.methodology).join(', ')}</p>
                                 </div>
                             </div>
                             <div className="Curry-upper">
-                                <h4>Popularly Eaten With: {recipe.PopularlyEaten}</h4>
-                                <h4>Popular Regions: {recipe.PopularRegions}</h4>
-                                <h4>Estimated Calories: {recipe.EstimatedCalories}</h4>
+                                <h4>Popularly Eaten With: {recipe.popularMeals}</h4>
+                                <h4>Popular Regions: {recipe.popularRegions}</h4>
+                                <h4>Estimated Calories: {recipe.estimatedCalories}</h4>
                             </div>
                             {!clickedStates[index] ? (
                                 <div>
