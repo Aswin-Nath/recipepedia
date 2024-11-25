@@ -40,8 +40,8 @@
 
 .LatestRecipe-image img {
     border-radius: 20px;
-    width: 100%; /* Make the image responsive */
-    max-width: 200px; /* Limit max width for images */
+    width: 200px; 
+    height: 200px;
 }
 
 h4 {

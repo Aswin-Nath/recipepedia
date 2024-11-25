@@ -1,16 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
-import "./Curry.css";
-import start from "../../../images/start.png";
-import like_image from "../../../images/Like.png";
-import Love from "../../../images/love.png";
-import Comments from "../../../images/Comments.png";
+import React, { useState, useEffect } from 'react';
+import './Curry.css';
 
 function Curry() {
     const [recipes, setRecipes] = useState([]);
-    const [hoveredIndex, setHoveredIndex] = useState(null);
-    const timeoutRefs = useRef([]);
-    const [likes, setLikes] = useState(Array(10).fill(false)); // Assume 10 recipes for initial state
     const [comments, setComments] = useState(Array(10).fill(0));
+    const [likemap, setLikemap] = useState(new Map());
+    const [addLikes, setAddLikes] = useState([]);
+    const [removeLikes, setRemoveLikes] = useState([]);
+    const [addLikesPostid, setAddLikesPostid] = useState([]);
+    const [removeLikesPostid, setRemoveLikesPostid] = useState(-1);
 
     const fetchRecipes = async () => {
         try {
@@ -19,30 +17,142 @@ function Curry() {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             const data = await response.json();
-            console.log("Fetched recipes:", data);
+            console.log('Fetched recipes:', data);
             setRecipes(data);
-            setLikes(Array(data.length).fill(false)); // Initialize likes state based on fetched data length
-            setComments(Array(data.length).fill(0)); // Initialize comments state based on fetched data length
         } catch (error) {
-            console.error("Error fetching recipes:", error);
+            console.error('Error fetching recipes:', error);
         }
     };
-    
+
+    const fetchLikes = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/api/getlikes');
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data = await response.json();
+            const tempLikeMap = new Map();
+
+            for (let i = 0; i < data.length; i++) {
+                const item = data[i];
+                if (!tempLikeMap.has(item.postid)) {
+                    tempLikeMap.set(item.postid, []);
+                }
+                tempLikeMap.get(item.postid).push(item.userid);
+            }
+            setLikemap(tempLikeMap);
+        } catch (error) {
+            console.error('Error fetching likes:', error);
+        }
+    };
+
+    const handleLikeClick = (recipeId) => {
+        const userId = 101; // Replace with the actual logged-in user's ID
+        const isLiked = likemap.get(recipeId)?.includes(userId);
+
+        // Update the likemap state
+        const updatedLikemap = new Map(likemap);
+        if (isLiked) {
+            updatedLikemap.set(recipeId, updatedLikemap.get(recipeId).filter(id => id !== userId));
+            setRemoveLikesPostid(recipeId);
+            setRemoveLikes([...removeLikes, { postid: recipeId, userid: userId }]);
+        } else {
+            updatedLikemap.set(recipeId, [...(updatedLikemap.get(recipeId) || []), userId]);
+            setAddLikesPostid(recipeId);
+            setAddLikes([...addLikes, { postid: recipeId, userid: userId }]);
+        }
+
+        setLikemap(updatedLikemap);
+    };
+
+    const updateLikesInDB = async () => {
+        try {
+            const requests = [];
+
+            // For adding likes (single postid)
+           
+
+            // For adding likes (List of UserLike objects)
+            if (addLikes.length > 0) {
+                console.log('Adding likes with UserLike...');
+                const addLikesRequest = fetch('http://localhost:8080/api/addlikes', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(addLikes),
+                });
+                requests.push(addLikesRequest);
+            }
+            // addLikesPostid=[1,2,3];
+            if (addLikesPostid!=-1) {
+                console.log('Adding likes by postid...');
+                const addLikesPostidRequest = fetch('http://localhost:8080/api/addlikesB', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(addLikesPostid)  // This sends an object with postid
+                });
+                requests.push(addLikesPostidRequest);
+            }
+
+            // For removing likes (single postid)
+            
+
+            // For removing likes (List of UserLike objects)
+            if (removeLikes.length > 0) {
+                console.log('Removing likes with UserLike...');
+                const removeLikesRequest = fetch('http://localhost:8080/api/removelikes', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(removeLikes),
+                });
+                requests.push(removeLikesRequest);
+            }
+
+            if (removeLikesPostid!=-1) {
+                console.log('Removing likes by postid...');
+                const removeLikesPostidRequest = fetch('http://localhost:8080/api/removelikesB', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(removeLikesPostid)  // This sends an object with postid
+
+                });
+                requests.push(removeLikesPostidRequest);
+            }
+
+            // Wait for all requests to finish
+            await Promise.all(requests);
+
+            // Clear likes after successful update
+            setAddLikes([]);
+            setAddLikesPostid([]);
+            setRemoveLikes([]);
+            setRemoveLikesPostid([]);
+        } catch (error) {
+            console.error('Error updating likes in DB:', error);
+        }
+    };
+
     useEffect(() => {
         fetchRecipes();
+        fetchLikes();
     }, []);
 
-    const handleLike = (index) => {
-        const updatedLikes = [...likes];
-        updatedLikes[index] = !updatedLikes[index]; // Toggle like state
-        setLikes(updatedLikes);
-    };
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (addLikes.length || removeLikes.length) {
+                updateLikesInDB();
+            }
+        }, 1000);
 
-    const handleComment = (index) => {
-        const updatedComments = [...comments];
-        updatedComments[index]++; // Increment comment count
-        setComments(updatedComments);
-    };
+        return () => clearInterval(interval);
+    }, [addLikes, removeLikes]);
+
+    useEffect(() => {
+        console.log('Add Likes updated:', addLikes);
+    }, [addLikes]);
+
+    useEffect(() => {
+        console.log('Remove Likes updated:', removeLikes);
+    }, [removeLikes]);
 
     return (
         <div className="Curry">
@@ -52,9 +162,9 @@ function Curry() {
                         <div className="Curry-item" key={index}>
                             <div className="Curry-image">
                                 <img
-                                    style={{ width: "200px", height: "300px", paddingLeft: "10px" }} 
-                                    src={recipe.imageUrl} 
-                                    alt={recipe.name} 
+                                    style={{ width: '200px', height: '300px', paddingLeft: '10px' }}
+                                    src={recipe.imageUrl}
+                                    alt={recipe.name}
                                     border="0"
                                 />
                                 <h4>{recipe.name}</h4>
@@ -73,16 +183,13 @@ function Curry() {
                                 <h4>Estimated Calories: {recipe.estimatedCalories}</h4>
                             </div>
                             <div className="Curry-interactions">
-                                <button 
-                                    className={`like-button ${likes[index] ? 'liked' : ''}`}
-                                    onClick={() => handleLike(index)}
+                                <button
+                                    className={`like-button ${likemap.get(recipe.id)?.includes(101) ? 'liked' : ''}`}
+                                    onClick={() => handleLikeClick(recipe.id)}
                                 >
-                                    {likes[index] ? 'Liked' : 'Like'}
+                                    {likemap.get(recipe.id)?.includes(101) ? 'Liked' : 'Like'} {recipe.likes}
                                 </button>
-                                <button 
-                                    className="comment-button" 
-                                    onClick={() => handleComment(index)}
-                                >
+                                <button className="comment-button">
                                     Comment ({comments[index]})
                                 </button>
                             </div>

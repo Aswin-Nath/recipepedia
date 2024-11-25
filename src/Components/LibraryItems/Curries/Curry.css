@@ -109,77 +109,45 @@
 
 .hover-reactions img {
     width: 60px;
-}
-.Comments{
-    position: relative;
-    left: 500px;
-    bottom: 120px;
-}
-.Comments img{
-    width: 80px;
-    height: 40px;
-}
-.Uploaded-image{
-    width: 200px;
-    height: 300px;
-    position: relative;
-    left: 280px;
-    bottom: 200px;
-    border-radius: 20px;
-}
-.Upload-Recipe{
-    width: 550px;
-    height: 360px;
-    position: relative;
-    left: 200px;
-    border: 5px solid #000;
-    align-items: center;
-    border-radius: 20px;
-}
-.Form-data{
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    row-gap: 10px;
-    padding-top: 30px;
-    right: 50px;
-}
-.Upload-Recipe button{
-    width: 120px;
-    height: 40px;
-    border-radius: 20px;
-    position: relative;
-    left: 150px;
-}
-
-.Upload-Recipe input:nth-child(1){
-    width: auto;
-    width: 250px;
-    height: 50px;
-    text-align: center;
-    position: relative;
-    left: 100px;
-    border: 1px solid #000;
-    border-radius: 20px;
-    /* text-align: center; */
-}
-.remove-icon{
-    width: 30px;
     height: 30px;
-    position: relative;
-    bottom: 490px;
-    left: 510px;
+    cursor: pointer;
+    margin-right: 10px; /* Space between reaction images */
 }
 
-.file-upload{
-    background-color: red;
-    text-align: center ;
+.Curry-interactions {
+    display: flex;
+    justify-content: space-between; /* Space between the buttons */
+    margin-top: 10px; /* Spacing above */
 }
 
-.Chosen{
-    background-color: red;
-    width: 230px;
-    border-radius: 20px;
-    position: relative;
-    left: 120px;
+.like-button, .comment-button {
+    padding: 10px 15px; /* Padding for buttons */
+    border: none; /* Remove default border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-family: 'Courier New', Courier, monospace; /* Consistent font */
+}
+
+.like-button {
+    color: blue;
+    border: 1px solid blue;
+    background-color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.like-button.liked {
+    color: green;
+    border: 1px solid green;
+    background-color: white;
+}
+
+
+.comment-button {
+    background-color: #ffc107; /* Warning color for comment button */
+    color: white; /* White text */
+}
+
+.like-button:hover, .comment-button:hover {
+    opacity: 0.8; /* Slightly transparent on hover */
 }

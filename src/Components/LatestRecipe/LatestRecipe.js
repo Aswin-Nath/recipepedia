@@ -6,7 +6,7 @@ function LatestRecipe() {
 
     const fetchRecipes = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/recipes'); // Correct URL for the backend
+            const response = await fetch('http://localhost:8080/api/recipeLibrary'); // Correct URL for the backend
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
@@ -28,10 +28,10 @@ function LatestRecipe() {
                     {recipes.map((recipe, index) => (
                         <div className="LatestRecipe-item" key={index}>
                             <div className="LatestRecipe-image">
-                                <img src={recipe.imageUrl} alt={recipe.name} />
+                                <img src={recipe.imageUrl} />
                                 <h4>{recipe.name}</h4>
                                 <h4>Cook: {recipe.cook}</h4> {/* Assuming 'cook' data exists in your API */}
-                                <h4>Uploaded: {recipe.uploaded || "Just now"}</h4> {/* Placeholder for uploaded time */}
+                                <h4>Uploaded: {recipe.upload} hrs ago</h4> {/* Placeholder for uploaded time */}
                             </div>
                         </div>
                     ))}
