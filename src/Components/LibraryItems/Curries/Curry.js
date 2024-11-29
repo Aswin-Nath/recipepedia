@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Curry.css';
+import { Link } from 'react-router-dom';
 
 function Curry() {
     const [recipes, setRecipes] = useState([]);
@@ -18,7 +19,15 @@ function Curry() {
             }
             const data = await response.json();
             console.log('Fetched recipes:', data);
-            setRecipes(data);
+
+            // Parse ingredients and methodology fields into arrays
+            const parsedData = data.map(recipe => ({
+                ...recipe,
+                ingredients: recipe.ingredients.split(', '), // Parse the ingredients into an array
+                methodology: recipe.methodology.split('. ').filter(item => item), // Parse methodology into an array of steps
+            }));
+
+            setRecipes(parsedData);
         } catch (error) {
             console.error('Error fetching recipes:', error);
         }
@@ -69,9 +78,6 @@ function Curry() {
         try {
             const requests = [];
 
-            // For adding likes (single postid)
-           
-
             // For adding likes (List of UserLike objects)
             if (addLikes.length > 0) {
                 console.log('Adding likes with UserLike...');
@@ -82,19 +88,16 @@ function Curry() {
                 });
                 requests.push(addLikesRequest);
             }
-            // addLikesPostid=[1,2,3];
-            if (addLikesPostid!=-1) {
+
+            if (addLikesPostid !== -1) {
                 console.log('Adding likes by postid...');
                 const addLikesPostidRequest = fetch('http://localhost:8080/api/addlikesB', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(addLikesPostid)  // This sends an object with postid
+                    body: JSON.stringify(addLikesPostid),  // This sends an object with postid
                 });
                 requests.push(addLikesPostidRequest);
             }
-
-            // For removing likes (single postid)
-            
 
             // For removing likes (List of UserLike objects)
             if (removeLikes.length > 0) {
@@ -107,25 +110,23 @@ function Curry() {
                 requests.push(removeLikesRequest);
             }
 
-            if (removeLikesPostid!=-1) {
+            if (removeLikesPostid !== -1) {
                 console.log('Removing likes by postid...');
                 const removeLikesPostidRequest = fetch('http://localhost:8080/api/removelikesB', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(removeLikesPostid)  // This sends an object with postid
-
+                    body: JSON.stringify(removeLikesPostid),  // This sends an object with postid
                 });
                 requests.push(removeLikesPostidRequest);
             }
 
-            // Wait for all requests to finish
             await Promise.all(requests);
 
             // Clear likes after successful update
             setAddLikes([]);
-            setAddLikesPostid([]);
+            setAddLikesPostid(-1);
             setRemoveLikes([]);
-            setRemoveLikesPostid([]);
+            setRemoveLikesPostid(-1);
         } catch (error) {
             console.error('Error updating likes in DB:', error);
         }
@@ -157,6 +158,12 @@ function Curry() {
     return (
         <div className="Curry">
             <div className="Curry-Generator">
+                <button>
+                    <Link to="/ADD">
+                        Click to add New Recipe
+                    </Link>
+                </button>
+                
                 <div className="Curry-items">
                     {recipes.map((recipe, index) => (
                         <div className="Curry-item" key={index}>
@@ -171,10 +178,10 @@ function Curry() {
                             </div>
                             <div className="Curry-lower">
                                 <div className="Ingredients">
-                                    <p><strong>Ingredients:</strong> {JSON.parse(recipe.ingredients).join(', ')}</p>
+                                    <p><strong>Ingredients:</strong> {recipe.ingredients.join(', ')}</p>
                                 </div>
                                 <div className="Methodology">
-                                    <p><strong>Methodology:</strong> {JSON.parse(recipe.methodology).join(', ')}</p>
+                                    <p><strong>Methodology:</strong> {recipe.methodology.join('. ')}</p>
                                 </div>
                             </div>
                             <div className="Curry-upper">
@@ -184,13 +191,13 @@ function Curry() {
                             </div>
                             <div className="Curry-interactions">
                                 <button
-                                    className={`like-button ${likemap.get(recipe.id)?.includes(101) ? 'liked' : ''}`}
-                                    onClick={() => handleLikeClick(recipe.id)}
+                                    className={`like-button ${likemap.get(recipe.postid)?.includes(101) ? 'liked' : ''}`}
+                                    onClick={() => handleLikeClick(recipe.postid)}
                                 >
-                                    {likemap.get(recipe.id)?.includes(101) ? 'Liked' : 'Like'} {recipe.likes}
+                                    {likemap.get(recipe.postid)?.includes(101) ? 'Liked' : 'Like'} {recipe.likes}
                                 </button>
                                 <button className="comment-button">
-                                    Comment ({comments[index]})
+                                    Comment {comments[index]}
                                 </button>
                             </div>
                         </div>

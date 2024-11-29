@@ -1,38 +1,38 @@
 .Curry {
     display: flex;
-    justify-content: center; /* Center the items in the container */
-    padding: 20px; /* Add padding around the component */
-    background-color: #f8f8f8; /* Light background color for better contrast */
+    justify-content: center;
+    padding: 20px;
+    background-color: #f8f8f8;
 }
 
 .Curry-Generator {
-    width: 100%; /* Use full width of the container */
+    width: 100%;
 }
 
 .Curry-items {
     display: grid;
-    grid-template-columns: repeat(2, 720px); /* Two columns */
-    row-gap: 20px; /* Space between rows */
+    grid-template-columns: repeat(2, 720px);
+    row-gap: 50px;
     padding-top: 10px;
     padding-bottom: 10px;
 }
 
 .Curry-item {
     position: relative;
-    width: 100%; /* Use full width */
-    height: auto; /* Auto height for flexibility */
+    width: 100%;
+    height: auto;
     display: flex;
-    flex-direction: column; 
-    border: 1px solid #ccc; /* Light gray border for better visibility */
+    flex-direction: column;
+    border: 1px solid #ccc;
     border-radius: 20px;
-    padding: 20px; 
-    background-color: #ffffff; /* White background for the item */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-    transition: transform 0.3s; /* Smooth transform on hover */
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
 }
 
 .Curry-item:hover {
-    transform: translateY(-5px); /* Lift effect on hover */
+    transform: translateY(-5px);
 }
 
 .Curry-upper {
@@ -42,59 +42,58 @@
 }
 
 .Curry-upper h4 {
-    margin: 5px 0; /* Spacing for headings */
+    margin: 5px 0;
 }
 
-/* Color Styles for Headings */
 .Curry-upper h4:first-child {
-    color: #ff6347; /* Tomato color for "Popularly Eaten With" */
+    color: #ff6347;
 }
 
 .Curry-upper h4:nth-child(2) {
-    color: #4682b4; /* Steel blue for "Popular Regions" */
+    color: #4682b4;
 }
 
 .Curry-upper h4:nth-child(3) {
-    color: #32cd32; /* Lime green for "Estimated Calories" */
+    color: #32cd32;
 }
 
 .Curry-lower {
-    color: #555; /* Slightly lighter color for ingredients and methodology */
+    color: #555;
     font-family: 'Courier New', Courier, monospace;
-    font-weight: 600; /* Bolder font weight */
-    margin-top: 10px; /* Spacing above */
+    font-weight: 600;
+    margin-top: 10px;
 }
 
 .Ingredients, .Methodology {
-    padding: 10px 0; /* Vertical padding for spacing */
+    padding: 10px 0;
 }
 
 .Curry-image {
-    width: 100%; /* Full width of the item */
+    width: 40%;
     text-align: center;
 }
 
 .Curry-image img {
     border-radius: 20px;
-    width: 100%; /* Make the image responsive */
-    max-width: 200px; /* Limit max width for the image */
+    width: 100%;
+    max-width: 200px;
 }
 
 .hover-display {
-    border: 1px solid #ccc; /* Light gray border */
+    border: 1px solid #ccc;
     width: 200px;
     border-radius: 20px;
     position: relative;
     bottom: 80px;
-    background-color: #fff; /* White background for hover */
-    padding: 10px; /* Padding for the hover display */
+    background-color: #fff;
+    padding: 10px;
 }
 
 .hover-display img {
     width: 60px;
     height: 30px;
     cursor: pointer;
-    margin-right: 10px; /* Space between images */
+    margin-right: 10px;
 }
 
 .Like, .Love, .Comments {
@@ -104,50 +103,45 @@
 .hover-reactions {
     position: relative;
     bottom: 120px;
-    display: flex; /* Flex container for horizontal alignment */
+    display: flex;
 }
 
 .hover-reactions img {
     width: 60px;
     height: 30px;
     cursor: pointer;
-    margin-right: 10px; /* Space between reaction images */
+    margin-right: 10px;
 }
 
 .Curry-interactions {
     display: flex;
-    justify-content: space-between; /* Space between the buttons */
-    margin-top: 10px; /* Spacing above */
+    justify-content: space-between;
+    margin-top: 10px;
 }
 
 .like-button, .comment-button {
-    padding: 10px 15px; /* Padding for buttons */
-    border: none; /* Remove default border */
-    border-radius: 5px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor on hover */
-    font-family: 'Courier New', Courier, monospace; /* Consistent font */
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Courier New', Courier, monospace;
 }
 
 .like-button {
-    color: blue;
-    border: 1px solid blue;
-    background-color: white;
     padding: 5px 10px;
     cursor: pointer;
 }
 
 .like-button.liked {
-    color: green;
+    background-color: green;
     border: 1px solid green;
-    background-color: white;
 }
 
-
 .comment-button {
-    background-color: #ffc107; /* Warning color for comment button */
-    color: white; /* White text */
+    background-color: #ffc107;
+    color: white;
 }
 
 .like-button:hover, .comment-button:hover {
-    opacity: 0.8; /* Slightly transparent on hover */
+    opacity: 0.8;
 }
